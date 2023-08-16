@@ -1,4 +1,6 @@
 ---
+server.servlet.context-path: '/${info.app.name}'
+
 grails:
     profile: rest-api
     codegen:
@@ -97,9 +99,9 @@ environments:
     development:
         dataSource:
             driverClassName: 'oracle.jdbc.OracleDriver'
-            username: ''
-            password: ''
-            url: ''
+            username: 'aluno6'
+            password: 'aluno6'
+            url: 'jdbc:oracle:thin:@insoft-lnx4:1521:desenv01'
             dbCreate: 'create-drop'
 
     test:
