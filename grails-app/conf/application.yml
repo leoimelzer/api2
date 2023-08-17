@@ -91,6 +91,7 @@ hibernate:
 dataSource:
     pooled: true
     jmxExport: true
+    logSql: true
     driverClassName: org.h2.Driver
     username: sa
     password: ''
