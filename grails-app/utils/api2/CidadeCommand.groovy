@@ -1,15 +1,10 @@
 package api2
 
-import groovy.transform.EqualsAndHashCode
+import grails.validation.Validateable
 
-@EqualsAndHashCode(includes='id')
-class Cidade {
+class CidadeCommand implements Validateable {
     Long id
     String nome
-
-    static mapping = {
-        version false
-    }
 
     static constraints = {
         id generator: 'increment', primary: true
