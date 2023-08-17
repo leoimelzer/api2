@@ -6,9 +6,13 @@ class Funcionario {
 
     static belongsTo = [cidade: Cidade]
 
+    static mapping = {
+        version false
+    }
+
     static constraints = {
         id generator: 'increment', primary: true
-        nome nullable: false, blank: false, maxSize: 50, unique: 'cidade'
+        nome nullable: false, blank: false, maxSize: 50
         cidade nullable: false
     }
 }
