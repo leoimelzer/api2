@@ -8,7 +8,7 @@ import org.springframework.validation.FieldError
 
 class CidadeController {
 	static responseFormats = ['json']
-
+    static defaultAction = 'get'
     static allowedMethods = [
             list: 'GET',
             get: 'GET',
