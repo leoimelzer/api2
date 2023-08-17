@@ -1,7 +1,7 @@
 package api2
 
-import api2.command.CidadeCommand
-import api2.command.FuncionarioCommand
+import api2.commands.CidadeCommand
+import api2.commands.FuncionarioCommand
 
 class BootStrap {
     CidadeService cidadeService = new CidadeService()

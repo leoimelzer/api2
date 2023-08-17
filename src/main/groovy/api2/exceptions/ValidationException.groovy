@@ -1,4 +1,4 @@
-package api2.exception
+package api2.exceptions
 
 import org.springframework.validation.Errors
 

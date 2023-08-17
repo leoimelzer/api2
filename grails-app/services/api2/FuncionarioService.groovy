@@ -1,7 +1,7 @@
 package api2
 
-import api2.command.FuncionarioCommand
-import api2.exception.ValidationException
+import api2.commands.FuncionarioCommand
+import api2.exceptions.ValidationException
 import grails.gorm.transactions.Transactional
 import org.springframework.context.MessageSource
 
