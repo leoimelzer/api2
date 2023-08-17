@@ -1,8 +1,5 @@
 package api2
 
-import groovy.transform.EqualsAndHashCode
-
-@EqualsAndHashCode(includes='id')
 class Cidade {
     Long id
     String nome

@@ -1,11 +1,14 @@
 package api2
 
+import api2.command.CidadeCommand
+import api2.exception.ValidationException
+import org.springframework.context.MessageSource
+import org.springframework.http.HttpStatus
 import org.springframework.validation.FieldError
 
 class CidadeController {
-    def messageSource
-
 	static responseFormats = ['json']
+
     static allowedMethods = [
             list: 'GET',
             get: 'GET',
@@ -14,39 +17,38 @@ class CidadeController {
             delete: 'DELETE'
     ]
 
+    MessageSource messageSource
     CidadeService cidadeService = new CidadeService()
 	
     Object list() {
-        List<Cidade> data = cidadeService.list()
-        respond([success: true, data: data], status: 200)
+        Object data = cidadeService.list()
+        respond([success: true, data: data], status: HttpStatus.OK)
     }
 
     Object get(Long id) {
         Cidade data = cidadeService.get(id)
-        respond([success: true, data: data], status: 200)
+        respond([success: true, data: data], status: HttpStatus.OK)
     }
 
     Object save(CidadeCommand command) {
         Cidade data = cidadeService.save(command)
-        respond([success: true, data: data], status: 201)
+        respond([success: true, data: data], status: HttpStatus.CREATED)
     }
 
     Object update() {
         Long id = Long.parseLong(params.id)
         String nome = request.JSON.nome
         cidadeService.update(new CidadeCommand(id: id, nome: nome))
-        respond([], status: 204)
+        respond([:], status: HttpStatus.NO_CONTENT)
     }
 
     Object delete(Long id) {
         cidadeService.delete(id)
-        respond([], status: 204)
+        respond([:], status: HttpStatus.NO_CONTENT)
     }
 
     Object handleValidationException(ValidationException ex) {
         Locale locale = Locale.getDefault()
-
-        Integer errorCount = ex.errors.getFieldErrorCount()
         List errors = []
 
         ex.errors.fieldErrors.each { FieldError fieldError ->
@@ -56,10 +58,10 @@ class CidadeController {
             errors.add(error)
         }
 
-        respond([success: false, errorCount: errorCount, errors: errors], status: 400)
+        respond([success: false, errors: errors], status: HttpStatus.BAD_REQUEST)
     }
 
     Object handleException(Exception ex) {
-        respond([success: false, message: ex.getMessage()], status: 400)
+        respond([success: false, message: ex.getMessage()], status: HttpStatus.BAD_REQUEST)
     }
 }

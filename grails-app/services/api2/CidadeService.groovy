@@ -1,14 +1,17 @@
 package api2
 
+import api2.command.CidadeCommand
+import api2.exception.ValidationException
 import grails.gorm.transactions.Transactional
+import org.springframework.context.MessageSource
 
 @Transactional
 class CidadeService {
-    def messageSource
+    MessageSource messageSource
 
     Locale locale = Locale.getDefault()
 
-    List<Cidade> list() { Cidade.createCriteria().list {} }
+    Object list() { Cidade.createCriteria().list {} }
 
     Cidade get(Long id) {
         Cidade cidade = Cidade.get(id)
