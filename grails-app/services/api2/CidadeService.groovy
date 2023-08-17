@@ -8,7 +8,6 @@ import org.springframework.context.MessageSource
 @Transactional
 class CidadeService {
     MessageSource messageSource
-
     Locale locale = Locale.getDefault()
 
     Object list() { Cidade.createCriteria().list {} }
