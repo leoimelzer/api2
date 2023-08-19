@@ -30,12 +30,16 @@ class ReajusteSalarioService {
         Funcionario funcionario = Funcionario.get(command.funcionarioId)
         if (!funcionario) throw new Exception(ErrorMessageUtils.getMessage("funcionario.not.found"))
 
-        if (!ReajusteSalarioUtils.isValidDataReajuste(command.dataReajuste)) {
-            throw new Exception(ErrorMessageUtils.getMessage("dataReajuste.invalid"))
+        if (command.dataReajuste && !ReajusteSalarioUtils.isValidDataReajuste(command.dataReajuste)) {
+            throw new Exception(ErrorMessageUtils.getMessage("dataReajuste.invalid.format"))
+        }
+
+        if (command.valorSalario?.scale > 2 || command.valorSalario?.precision > 6) {
+            throw new Exception(ErrorMessageUtils.getMessage("valorSalario.invalid.precision"))
         }
 
         ReajusteSalario reajusteSalario = new ReajusteSalario(
-            dataReajuste: ReajusteSalarioUtils.parseDataReajuste(command.dataReajuste),
+            dataReajuste: command.dataReajuste ? ReajusteSalarioUtils.parseDataReajuste(command.dataReajuste) : null,
             funcionario: funcionario,
             valorSalario: command.valorSalario
         )
@@ -59,13 +63,20 @@ class ReajusteSalarioService {
 
         if (command.dataReajuste) {
             if (!ReajusteSalarioUtils.isValidDataReajuste(command.dataReajuste)) {
-                throw new Exception(ErrorMessageUtils.getMessage("dataReajuste.invalid"))
+                throw new Exception(ErrorMessageUtils.getMessage("dataReajuste.invalid.format"))
             }
 
             reajusteSalario.dataReajuste = ReajusteSalarioUtils.parseDataReajuste(command.dataReajuste)
         }
 
-        if (command.valorSalario) reajusteSalario.valorSalario = command.valorSalario
+        if (command.valorSalario) {
+            if (command.valorSalario?.scale > 2 || command.valorSalario?.precision > 6) {
+                throw new Exception(ErrorMessageUtils.getMessage("valorSalario.invalid.precision"))
+            }
+
+            reajusteSalario.valorSalario = command.valorSalario
+        }
+
         if (!reajusteSalario.validate()) throw new ValidationException(reajusteSalario.errors)
 
         reajusteSalario.save(flush: true)
