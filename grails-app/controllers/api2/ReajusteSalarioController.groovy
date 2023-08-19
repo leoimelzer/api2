@@ -3,7 +3,6 @@ package api2
 import api2.commands.ReajusteSalarioCommand
 import api2.exceptions.ValidationException
 import api2.utils.ErrorMessageUtils
-import org.springframework.context.MessageSource
 import org.springframework.http.HttpStatus
 import org.springframework.validation.FieldError
 
