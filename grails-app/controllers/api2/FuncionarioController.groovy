@@ -2,7 +2,7 @@ package api2
 
 import api2.commands.FuncionarioCommand
 import api2.exceptions.ValidationException
-import org.springframework.context.MessageSource
+import api2.utils.ErrorMessageUtils
 import org.springframework.http.HttpStatus
 import org.springframework.validation.FieldError
 
@@ -17,11 +17,10 @@ class FuncionarioController {
             delete: 'DELETE'
     ]
 
-    MessageSource messageSource
     FuncionarioService funcionarioService = new FuncionarioService()
 
     Object list() {
-        Object data = funcionarioService.list()
+        ArrayList<Funcionario> data = funcionarioService.list()
         respond([success: true, data: data], status: HttpStatus.OK)
     }
 
@@ -30,17 +29,14 @@ class FuncionarioController {
         respond([success: true, data: data], status: HttpStatus.OK)
     }
 
-    Object save(FuncionarioCommand command) {
-        Funcionario data = funcionarioService.save(command)
+    Object save(FuncionarioCommand funcionario) {
+        Funcionario data = funcionarioService.save(funcionario)
         respond([success: true, data: data], status: HttpStatus.CREATED)
     }
 
-    Object update() {
-        Long id = Long.parseLong(params.id)
-        Long cidadeId = request.JSON.cidadeId
-        String nome = request.JSON.nome
-
-        funcionarioService.update(new FuncionarioCommand(id: id, nome: nome, cidadeId: cidadeId))
+    Object update(Long id, FuncionarioCommand funcionario) {
+        funcionario.id = id
+        funcionarioService.update(funcionario)
         respond([:], status: HttpStatus.NO_CONTENT)
     }
 
@@ -50,13 +46,12 @@ class FuncionarioController {
     }
 
     Object handleValidationException(ValidationException ex) {
-        Locale locale = Locale.getDefault()
-        List errors = []
+        ArrayList errors = []
 
         ex.errors.fieldErrors.each { FieldError fieldError ->
             LinkedHashMap error = [:]
             error.field = fieldError.field
-            error.message = messageSource.getMessage(fieldError, locale)
+            error.message = ErrorMessageUtils.getMessage(fieldError.code)
             errors.add(error)
         }
 

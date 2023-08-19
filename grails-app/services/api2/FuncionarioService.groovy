@@ -2,27 +2,23 @@ package api2
 
 import api2.commands.FuncionarioCommand
 import api2.exceptions.ValidationException
+import api2.utils.ErrorMessageUtils
 import grails.gorm.transactions.Transactional
-import org.springframework.context.MessageSource
 
 @Transactional
 class FuncionarioService {
-    MessageSource messageSource
-    Locale locale = Locale.getDefault()
-
-    Object list() { Funcionario.createCriteria().list {} }
+    ArrayList<Funcionario> list() { Funcionario.createCriteria().list {} }
 
     Funcionario get(Long id) {
         Funcionario funcionario = Funcionario.get(id)
-
-        if (!funcionario) throw new Exception(messageSource.getMessage("funcionario.not.found", null, locale))
+        if (!funcionario) throw new Exception(ErrorMessageUtils.getMessage("funcionario.not.found"))
 
         return funcionario
     }
 
     Funcionario save(FuncionarioCommand command) {
         Cidade cidade = Cidade.get(command.cidadeId)
-        if (!cidade) throw new Exception(messageSource.getMessage("cidade.not.found", null, locale))
+        if (!cidade) throw new Exception(ErrorMessageUtils.getMessage("cidade.not.found"))
 
         Funcionario funcionario = new Funcionario(nome: command.nome, cidade: cidade)
         if (!funcionario.validate()) throw new ValidationException(funcionario.errors)
@@ -33,25 +29,27 @@ class FuncionarioService {
 
     void update(FuncionarioCommand command) {
         Funcionario funcionario = Funcionario.get(command.id)
-        if (!funcionario) throw new Exception(messageSource.getMessage("funcionario.not.found", null, locale))
+        if (!funcionario) throw new Exception(ErrorMessageUtils.getMessage("funcionario.not.found"))
 
         if (command.cidadeId) {
             Cidade cidade = Cidade.get(command.cidadeId)
-            if (!cidade) throw new Exception(messageSource.getMessage("cidade.not.found", null, locale))
+            if (!cidade) throw new Exception(ErrorMessageUtils.getMessage("cidade.not.found"))
 
             funcionario.cidade = cidade
         }
 
         funcionario.nome = command.nome
-
         if (!funcionario.validate()) throw new ValidationException(funcionario.errors)
+
         funcionario.save(flush: true)
     }
 
     void delete(Long id) {
         Funcionario funcionario = Funcionario.get(id)
 
-        if (!funcionario) throw new Exception(messageSource.getMessage("funcionario.not.found", null, locale))
+        if (!funcionario) throw new Exception(ErrorMessageUtils.getMessage("funcionario.not.found"))
+        if (ReajusteSalario.findByFuncionario(funcionario)) throw new Exception(ErrorMessageUtils.getMessage("child.record.found"))
+
         funcionario.delete(flush: true)
     }
 }

@@ -2,7 +2,7 @@ package api2
 
 import api2.commands.CidadeCommand
 import api2.exceptions.ValidationException
-import org.springframework.context.MessageSource
+import api2.utils.ErrorMessageUtils
 import org.springframework.http.HttpStatus
 import org.springframework.validation.FieldError
 
@@ -17,11 +17,10 @@ class CidadeController {
             delete: 'DELETE'
     ]
 
-    MessageSource messageSource
     CidadeService cidadeService = new CidadeService()
-	
+
     Object list() {
-        Object data = cidadeService.list()
+        ArrayList<Cidade> data = cidadeService.list()
         respond([success: true, data: data], status: HttpStatus.OK)
     }
 
@@ -30,15 +29,14 @@ class CidadeController {
         respond([success: true, data: data], status: HttpStatus.OK)
     }
 
-    Object save(CidadeCommand command) {
-        Cidade data = cidadeService.save(command)
+    Object save(CidadeCommand cidade) {
+        Cidade data = cidadeService.save(cidade)
         respond([success: true, data: data], status: HttpStatus.CREATED)
     }
 
-    Object update() {
-        Long id = Long.parseLong(params.id)
-        String nome = request.JSON.nome
-        cidadeService.update(new CidadeCommand(id: id, nome: nome))
+    Object update(Long id, CidadeCommand cidade) {
+        cidade.id = id
+        cidadeService.update(cidade)
         respond([:], status: HttpStatus.NO_CONTENT)
     }
 
@@ -48,13 +46,12 @@ class CidadeController {
     }
 
     Object handleValidationException(ValidationException ex) {
-        Locale locale = Locale.getDefault()
-        List errors = []
+        ArrayList errors = []
 
         ex.errors.fieldErrors.each { FieldError fieldError ->
             LinkedHashMap error = [:]
             error.field = fieldError.field
-            error.message = messageSource.getMessage(fieldError, locale)
+            error.message = ErrorMessageUtils.getMessage(fieldError.code)
             errors.add(error)
         }
 

@@ -2,20 +2,16 @@ package api2
 
 import api2.commands.CidadeCommand
 import api2.exceptions.ValidationException
+import api2.utils.ErrorMessageUtils
 import grails.gorm.transactions.Transactional
-import org.springframework.context.MessageSource
 
 @Transactional
 class CidadeService {
-    MessageSource messageSource
-    Locale locale = Locale.getDefault()
-
-    Object list() { Cidade.createCriteria().list {} }
+    ArrayList<Cidade> list() { Cidade.createCriteria().list {} }
 
     Cidade get(Long id) {
         Cidade cidade = Cidade.get(id)
-
-        if (!cidade) throw new Exception(messageSource.getMessage("cidade.not.found", null, locale))
+        if (!cidade) throw new Exception(ErrorMessageUtils.getMessage("cidade.not.found"))
 
         return cidade
     }
@@ -30,10 +26,9 @@ class CidadeService {
 
     void update(CidadeCommand command) {
         Cidade cidade = Cidade.get(command.id)
-        if (!cidade) throw new Exception(messageSource.getMessage("cidade.not.found", null, locale))
+        if (!cidade) throw new Exception(ErrorMessageUtils.getMessage("cidade.not.found"))
 
         cidade.nome = command.nome
-
         if (!cidade.validate()) throw new ValidationException(cidade.errors)
 
         cidade.save(flush: true)
@@ -42,7 +37,8 @@ class CidadeService {
     void delete(Long id) {
         Cidade cidade = Cidade.get(id)
 
-        if (!cidade) throw new Exception(messageSource.getMessage("cidade.not.found", null, locale))
+        if (!cidade) throw new Exception(ErrorMessageUtils.getMessage("cidade.not.found"))
+        if (Funcionario.findByCidade(cidade)) throw new Exception(ErrorMessageUtils.getMessage("child.record.found"))
 
         cidade.delete(flush: true)
     }
