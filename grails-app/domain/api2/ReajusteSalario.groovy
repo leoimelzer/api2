@@ -9,10 +9,14 @@ class ReajusteSalario {
 
     static belongsTo = [funcionario: Funcionario]
 
+    static mapping = {
+        version false
+    }
+
     static constraints = {
         id generator: 'increment', primary: true
         dataReajuste nullable: false
-        valorSalario nullable: false, maxSize: 6,2
+        valorSalario nullable: false, maxValue: 6.2
         funcionario nullable: false
     }
 }
