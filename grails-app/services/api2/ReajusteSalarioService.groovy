@@ -35,7 +35,7 @@ class ReajusteSalarioService {
         }
 
         ReajusteSalario reajusteSalario = new ReajusteSalario(
-            dataReajuste: ReajusteSalarioUtils.parseDataReajuste(command.dataReajuste.toString()),
+            dataReajuste: ReajusteSalarioUtils.parseDataReajuste(command.dataReajuste),
             funcionario: funcionario,
             valorSalario: command.valorSalario
         )
@@ -62,11 +62,10 @@ class ReajusteSalarioService {
                 throw new Exception(ErrorMessageUtils.getMessage("dataReajuste.invalid"))
             }
 
-            reajusteSalario.dataReajuste = ReajusteSalarioUtils.parseDataReajuste(command.dataReajuste.toString())
+            reajusteSalario.dataReajuste = ReajusteSalarioUtils.parseDataReajuste(command.dataReajuste)
         }
 
         if (command.valorSalario) reajusteSalario.valorSalario = command.valorSalario
-
         if (!reajusteSalario.validate()) throw new ValidationException(reajusteSalario.errors)
 
         reajusteSalario.save(flush: true)

@@ -36,7 +36,6 @@ class CidadeService {
 
     void delete(Long id) {
         Cidade cidade = Cidade.get(id)
-
         if (!cidade) throw new Exception(ErrorMessageUtils.getMessage("cidade.not.found"))
         if (Funcionario.findByCidade(cidade)) throw new Exception(ErrorMessageUtils.getMessage("child.record.found"))
 

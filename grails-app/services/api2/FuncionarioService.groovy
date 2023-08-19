@@ -46,7 +46,6 @@ class FuncionarioService {
 
     void delete(Long id) {
         Funcionario funcionario = Funcionario.get(id)
-
         if (!funcionario) throw new Exception(ErrorMessageUtils.getMessage("funcionario.not.found"))
         if (ReajusteSalario.findByFuncionario(funcionario)) throw new Exception(ErrorMessageUtils.getMessage("child.record.found"))
 
