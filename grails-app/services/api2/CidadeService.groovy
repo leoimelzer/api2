@@ -7,7 +7,7 @@ import grails.gorm.transactions.Transactional
 
 @Transactional
 class CidadeService {
-    ArrayList<Cidade> list() { Cidade.createCriteria().list {} }
+    ArrayList<Cidade> list() { Cidade.createCriteria().list {} as ArrayList<Cidade> }
 
     Cidade get(Long id) {
         Cidade cidade = Cidade.get(id)

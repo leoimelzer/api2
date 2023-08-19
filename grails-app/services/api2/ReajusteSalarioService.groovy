@@ -10,7 +10,7 @@ import grails.gorm.transactions.Transactional
 class ReajusteSalarioService {
     ArrayList<LinkedHashMap> list() {
         ArrayList<LinkedHashMap> response = []
-        ArrayList<ReajusteSalario> reajusteSalarios = ReajusteSalario.createCriteria().list {}
+        ArrayList<ReajusteSalario> reajusteSalarios = ReajusteSalario.createCriteria().list {} as ArrayList<ReajusteSalario>
 
         for (ReajusteSalario reajusteSalario : reajusteSalarios) {
             response << ReajusteSalarioUtils.formatResponse(reajusteSalario)

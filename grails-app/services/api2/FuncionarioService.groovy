@@ -7,7 +7,7 @@ import grails.gorm.transactions.Transactional
 
 @Transactional
 class FuncionarioService {
-    ArrayList<Funcionario> list() { Funcionario.createCriteria().list {} }
+    ArrayList<Funcionario> list() { Funcionario.createCriteria().list {} as ArrayList<Funcionario> }
 
     Funcionario get(Long id) {
         Funcionario funcionario = Funcionario.get(id)
