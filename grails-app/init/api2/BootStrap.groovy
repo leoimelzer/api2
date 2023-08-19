@@ -22,7 +22,7 @@ class BootStrap {
 
         reajusteSalarioService.save(new ReajusteSalarioCommand(
             id: 1,
-            valorSalario: 4.0,
+            valorSalario: 3058.85,
             dataReajuste: ReajusteSalarioUtils.formatDataReajuste(LocalDate.now()),
             funcionarioId: 1)
         )

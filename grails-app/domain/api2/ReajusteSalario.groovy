@@ -16,7 +16,7 @@ class ReajusteSalario {
     static constraints = {
         id generator: 'increment', primary: true
         dataReajuste nullable: false
-        valorSalario nullable: false, maxValue: 6.2
+        valorSalario nullable: false, precision: 6,  scale: 2
         funcionario nullable: false
     }
 }
