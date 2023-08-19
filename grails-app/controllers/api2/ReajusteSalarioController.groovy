@@ -1,12 +1,10 @@
 package api2
 
 import api2.commands.ReajusteSalarioCommand
-import api2.exceptions.ValidationException
-import api2.utils.ErrorMessageUtils
+import api2.exceptions.ControllerExceptionHandler
 import org.springframework.http.HttpStatus
-import org.springframework.validation.FieldError
 
-class ReajusteSalarioController {
+class ReajusteSalarioController implements ControllerExceptionHandler {
     static responseFormats = ['json']
     static defaultAction = 'get'
     static allowedMethods = [
@@ -43,22 +41,5 @@ class ReajusteSalarioController {
     Object delete(Long id) {
         reajusteSalarioService.delete(id)
         respond([:], status: HttpStatus.NO_CONTENT)
-    }
-
-    Object handleValidationException(ValidationException ex) {
-        ArrayList errors = []
-
-        ex.errors.fieldErrors.each { FieldError fieldError ->
-            LinkedHashMap error = [:]
-            error.field = fieldError.field
-            error.message = ErrorMessageUtils.getMessage(fieldError.code)
-            errors.add(error)
-        }
-
-        respond([success: false, errors: errors], status: HttpStatus.BAD_REQUEST)
-    }
-
-    Object handleException(Exception ex) {
-        respond([success: false, message: ex.getMessage()], status: HttpStatus.BAD_REQUEST)
     }
 }
